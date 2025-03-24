@@ -27,3 +27,19 @@ export async function POST(request) {
     return NextResponse.json({ error: error }, { status: 500 })
   }
 }
+
+export async function PUT(request) {
+  try{
+    const { id, name, detail, coverimage, latitude, longitude } = await request.json();
+    const [result] = await db.query(
+      'UPDATE attractions SET name=?, detail=?, coverimage=?, latitude=?, longitude=? WHERE id=?'
+      , [name, detail, coverimage, latitude, longitude, id]
+    );
+    if(result.affectedRows == 0){
+      return NextResponse.json({ error : "ID Not Found"}, {status : 404});
+    }
+    return NextResponse.json({ message: "Update", id}, { status: 200 });
+  }catch(error){
+    return NextResponse.json({ error: error }, { status: 500 })
+  }
+}
